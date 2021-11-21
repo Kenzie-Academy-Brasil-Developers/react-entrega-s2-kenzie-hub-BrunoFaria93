@@ -1,0 +1,43 @@
+.big-container{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    height: 100vh;
+    width: 100vw;
+    background-color: #F5F5F5;
+}
+.tecnologias{
+    display: flex;
+    width: 30vw;
+    height: 50vh;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px 10px 0px 0px;
+    box-shadow: 3px 3px 10px #d8d8d8;
+    margin-top: 10px;
+}
+.meus-trabalhos{
+    display: flex;
+    width: 30vw;
+    height: 50vh;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px 10px 0px 0px;
+    box-shadow: 3px 3px 10px #d8d8d8;
+    margin-top: 10px;
+}
+.profile{
+    display: flex;
+    width: 30vw;
+    height: 50vh;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 3px 3px 10px #d8d8d8;
+    margin-top: 10px;
+}
+.profile-header{
+    height: 30%;
+    background-color: #403CAA;
+    border-radius: 10px 10px 0px 0px;
+    
+}
