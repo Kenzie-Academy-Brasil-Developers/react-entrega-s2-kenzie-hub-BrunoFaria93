@@ -6,7 +6,7 @@ import * as yup from 'yup'
 import { useForm } from "react-hook-form"
 import { useHistory } from "react-router-dom"
 import { toast } from 'react-hot-toast'
-import axios from "axios"
+import api from '../../services/api'
 
 const Login = ({auth, setAuth}) => {
 
@@ -27,10 +27,10 @@ const Login = ({auth, setAuth}) => {
       });
 
 
-      const handleSignIn = (data) => {
-        
-        axios
-        .post('https://kenziehub.herokuapp.com/sessions', data)
+      const handleSignIn = ( {email, password} ) => {
+        const user = {email, password}
+        api
+        .post('/sessions', user)
         .then(response => {
             const {token, user} = response.data
 
@@ -39,7 +39,6 @@ const Login = ({auth, setAuth}) => {
 
             toast.success("Login feito com sucesso!")
             history.push('/devpage')
-
             
         })
         .catch((err) => toast.error('E-mail ou senha inválidos'))
@@ -72,7 +71,7 @@ const Login = ({auth, setAuth}) => {
             id="outlined-basic" 
             fullWidth 
             label='E-mail' 
-            sx={{ mt:2 }}
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
             helperText={errors.email?.message}
             error={!!errors.email?.message}
             />
@@ -84,7 +83,7 @@ const Login = ({auth, setAuth}) => {
             id="outlined-basic" 
             fullWidth 
             label='Senha' 
-            sx={{ mt:2 }}
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
             helperText={errors.password?.message}
             error={!!errors.password?.message}
             />

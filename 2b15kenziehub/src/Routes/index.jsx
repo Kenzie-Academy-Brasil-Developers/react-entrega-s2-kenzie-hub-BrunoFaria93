@@ -6,13 +6,14 @@ import Cadastro from "../pages/Cadastro";
 import DevPage from '../pages/DevPage'
 
 const Routes = () => {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(false)
+  const [modal, setModal] = useState(false)
 
   useEffect(() => {
     
     const user = JSON.parse(localStorage.getItem("KenzieHub:user"))
-    const token = localStorage.getItem("@KenzieHub:token");
-    
+    const token = localStorage.getItem("@KenzieHub:token")
+    console.log(token)
     if (token) {
       return setAuth(true);
     }

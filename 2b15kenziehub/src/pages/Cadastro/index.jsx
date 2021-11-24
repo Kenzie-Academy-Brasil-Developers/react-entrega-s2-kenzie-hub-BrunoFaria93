@@ -1,8 +1,54 @@
 import { Container, Button, TextField, CssBaseline, 
-    Box, Avatar, Typography, Grid, FormControlLabel, Checkbox} from "@mui/material"
+    Box, Typography, FormControl, RadioGroup, FormLabel, FormControlLabel, Radio} from "@mui/material"
 import { Link } from 'react-router-dom'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { useForm } from "react-hook-form"
+import { useHistory } from "react-router-dom"
+import { toast } from 'react-hot-toast'
+import api from '../../services/api'
+import { useState } from "react"
 
-const Cadastro = ({auth}) => {
+const Cadastro = ( {auth} ) => {
+
+    const [inputValue, setInputValue] = useState("Primeiro módulo (Introdução ao Frontend)")
+
+    const schema = yup.object().shape({
+        name: yup.string().required('Campo obrigatório!'),
+        email: yup.string().required('Campo obrigatório!'),
+        bio: yup.string().required('Campo obrigatório!'),
+        contact: yup.string().required('Campo obrigatório!'),
+        password: yup.string().min(6, 'Minimo de 6 digitos').required('Campo obrigatório!'),
+        passwordConfirm: yup.string().oneOf([yup.ref('password')], 'Senhas diferentes').required('Campo obrigatório')
+    })
+    // course_module: yup.boolean().required().oneOf([0 , 1], 'Campo obrigatório!'),
+    const history = useHistory();
+    
+    function handleInput(evt){
+        setInputValue(evt.target.value)
+    }
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm({
+        resolver: yupResolver(schema),
+      });
+
+
+      const handleSignIn = ( {email, password, name, bio, contact, course_module} ) => { 
+        const user = {email, password, name, bio, contact, course_module}
+        api
+        .post('/users', user)
+        .then(response => {
+ 
+            toast.success("Cadastro feito com sucesso!")
+            history.push('/')
+            
+        })
+        .catch((err) => toast.error('E-mail ou senha inválidos'))
+    }
 
     return(
 
@@ -19,47 +65,116 @@ const Cadastro = ({auth}) => {
         >
             <Typography component='h1' variant='h4'>KenzieHub</Typography>
         </Box>
+        
         <Box 
         component='form' 
         sx={{ mt: 1, border: '1px solid #F5F5F5'}} 
-        >
+        onSubmit={handleSubmit(handleSignIn)}>
             
-            <TextField fullWidth label='Nome' sx={{ mt:2 }}/>
-            <TextField fullWidth label='Email' sx={{ mt:2 }}/>
-            <TextField fullWidth label='Bio' sx={{ mt:2 }}/>
-            <TextField fullWidth label='Contato' sx={{ mt:2 }}/>
-            <TextField fullWidth label='Bio' sx={{ mt:2 }}/>
-            <TextField fullWidth label='Contato' sx={{ mt:2 }}/>
+            <TextField 
+            {...register("name")}
+            id="outlined-basic" 
+            fullWidth 
+            label='Nome' 
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
+            helperText={errors.name?.message}
+            error={!!errors.name?.message}
+            />
+            <TextField 
+            {...register("email")}
+            id="outlined-basic" 
+            fullWidth 
+            label='Email' 
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
+            helperText={errors.email?.message}
+            error={!!errors.email?.message}
+            />
+            <TextField 
+            {...register("bio")}
+            id="outlined-basic" 
+            fullWidth 
+            label='Bio' 
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
+            helperText={errors.bio?.message}
+            error={!!errors.bio?.message}
+            />
+            <TextField 
+            type='tel'
+            {...register("contact")}
+            id="outlined-basic"
+            fullWidth 
+            label='Contato' 
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
+            helperText={errors.contact?.message}
+            error={!!errors.contact?.message}
+            />
+
             <Box component='div'  sx={{ 
                 mt: 1, 
-                border: '1px solid #F5F5F5',
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'space-around'
                 }}>
+
+            <FormControl component="fieldset">
+            <FormLabel component="legend">Selecionar módulo</FormLabel>
+
+            <RadioGroup 
+            value = {inputValue}
+            row aria-label="course_module" 
+            onChange={(evt) => handleInput(evt)}
+            >
+
                 <FormControlLabel 
-                    control={<Checkbox value='Primeiro'/>}
-                    label="Primeiro"    
+                {...register("course_module")}
+                value="Primeiro módulo (Introdução ao Frontend)" 
+                control={<Radio />} 
+                label="Primeiro" 
                 
                 />
-                <FormControlLabel 
-                    control={<Checkbox value='Segundo'/>}
-                    label="Segundo"    
-                
+                <FormControlLabel
+                {...register("course_module")} 
+                value="Segundo módulo (Frontend Avançado)" 
+                control={<Radio />} 
+                label="Segundo" 
                 />
-                <FormControlLabel 
-                    control={<Checkbox value='Terceiro'/>}
-                    label="Terceiro"    
-                
-                />
-                <FormControlLabel 
-                    control={<Checkbox value='Quarto'/>}
-                    label="Quarto"    
-                
-                />
+
+                <FormControlLabel
+                {...register("course_module")} 
+                value="Terceiro módulo (Introdução ao Backend)" 
+                control={<Radio />} 
+                label="Terceiro" />
+
+                <FormControlLabel
+                {...register("course_module")} 
+                value="Quarto módulo (Backend Avançado)"
+                control={<Radio />} 
+                label="Quarto" />
+
+            </RadioGroup>
+            </FormControl>
             </Box>
-            <TextField id="outlined-basic" fullWidth label='Senha' sx={{ mt:2 }}/>
-            <TextField id="outlined-basic" fullWidth label='Confirmar Senha' sx={{ mt:2 }}/>
+            <TextField 
+            type='password'
+            {...register("password")}
+            id="outlined-basic"
+            fullWidth 
+            label='Senha' 
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
+            helperText={errors.password?.message}
+            error={!!errors.password?.message}
+            />
+
+            <TextField
+            type='password'
+            {...register("passwordConfirm")}
+            id="outlined-basic" 
+            fullWidth 
+            label='Confirmar Senha' 
+            sx={{ mt:2, background: '#F5F5F5', color: '#999999' }}
+            helperText={errors.passwordConfirm?.message}
+            error={!!errors.passwordConfirm?.message}
+            />
 
             <Button type='submit' fullWidth variant='contained' 
                 sx={{
