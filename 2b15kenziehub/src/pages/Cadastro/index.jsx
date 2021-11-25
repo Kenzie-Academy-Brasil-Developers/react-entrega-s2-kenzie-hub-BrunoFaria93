@@ -63,7 +63,7 @@ const Cadastro = ( {auth} ) => {
                 alignItems: 'center'
             }}
         >
-            <Typography component='h1' variant='h4'>KenzieHub</Typography>
+            <Typography component='h1' variant='h4'>Kenzie <span className='hub'>Hub</span></Typography>
         </Box>
         
         <Box 
